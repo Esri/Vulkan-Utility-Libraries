@@ -3,8 +3,8 @@ from conans import ConanFile
 class VulkanUtilityLibrariesConan(ConanFile):
     name = "Vulkan-Utility-Libraries"
     version = "0.0.1"
-    url = "https://github.com/duncanthomson/Vulkan-Utility-Libraries"
-    license = "https://github.com/duncanthomson/Vulkan-Utility-Libraries/blob/main/LICENSES/Apache-2.0.txt"
+    url = "https://github.com/Esri/Vulkan-Utility-Libraries/blob/runtimecore"
+    license = "https://github.com/Esri/Vulkan-Utility-Libraries/blob/runtimecore/LICENSES/Apache-2.0.txt"
     description = "Share code across various Vulkan repositories, solving long standing issues for Vulkan SDK developers and users"
 
     # RTC specific triple
