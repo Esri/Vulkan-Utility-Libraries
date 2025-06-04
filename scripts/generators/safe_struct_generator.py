@@ -1,17 +1,17 @@
 #!/usr/bin/python3 -i
 #
-# Copyright (c) 2015-2024 The Khronos Group Inc.
-# Copyright (c) 2015-2024 Valve Corporation
-# Copyright (c) 2015-2024 LunarG, Inc.
-# Copyright (c) 2015-2024 Google Inc.
-# Copyright (c) 2023-2024 RasterGrid Kft.
+# Copyright (c) 2015-2025 The Khronos Group Inc.
+# Copyright (c) 2015-2025 Valve Corporation
+# Copyright (c) 2015-2025 LunarG, Inc.
+# Copyright (c) 2015-2025 Google Inc.
+# Copyright (c) 2023-2025 RasterGrid Kft.
 #
 # SPDX-License-Identifier: Apache-2.0
 
 import os
 import re
-from generators.vulkan_object import Struct, Member
-from generators.base_generator import BaseGenerator
+from vulkan_object import Struct, Member
+from base_generator import BaseGenerator
 from generators.generator_utils import PlatformGuardHelper
 
 class SafeStructOutputGenerator(BaseGenerator):
@@ -41,8 +41,6 @@ class SafeStructOutputGenerator(BaseGenerator):
             'VkMicromapBuildInfoEXT',
             'VkAccelerationStructureTrianglesOpacityMicromapEXT',
             'VkAccelerationStructureTrianglesDisplacementMicromapNV',
-            # The VkDescriptorType field needs to handle every type which is something best done manually
-            'VkDescriptorDataEXT',
              # Special case because its pointers may be non-null but ignored
             'VkGraphicsPipelineCreateInfo',
             # Special case because it has custom construct parameters
@@ -61,6 +59,8 @@ class SafeStructOutputGenerator(BaseGenerator):
         # These 'data' union are decided by the 'type' in the same parent struct
         self.union_of_pointers = [
             'VkDescriptorDataEXT',
+            'VkIndirectCommandsTokenDataEXT',
+            'VkIndirectExecutionSetInfoEXT',
         ]
         self.union_of_pointer_callers = [
             'VkDescriptorGetInfoEXT',
@@ -82,6 +82,17 @@ class SafeStructOutputGenerator(BaseGenerator):
                 ', const bool is_host, const VkAccelerationStructureBuildRangeInfoKHR *build_range_info',
         }
 
+    def isInPnextChain(self, struct: Struct) -> bool:
+        # Can appear in VkPipelineCreateInfoKHR::pNext even though it isn't listed in the xml structextends attribute
+        # VUID-VkPipelineCreateInfoKHR-pNext-09604
+        pipeline_create_infos = [
+            'VkGraphicsPipelineCreateInfo',
+            'VkExecutionGraphPipelineCreateInfoAMDX',
+            'VkRayTracingPipelineCreateInfoKHR',
+            'VkComputePipelineCreateInfo',
+        ]
+        return struct.extends or struct.name in pipeline_create_infos
+
     # Determine if a structure needs a safe_struct helper function
     # That is, it has an sType or one of its members is a pointer
     def needSafeStruct(self, struct: Struct) -> bool:
@@ -96,6 +107,9 @@ class SafeStructOutputGenerator(BaseGenerator):
         for member in struct.members:
             if member.pointer:
                 return True
+        # The VK_EXT_sample_locations design created edge case, easiest to handle here
+        if struct.name == 'VkAttachmentSampleLocationsEXT' or struct.name == 'VkSubpassSampleLocationsEXT':
+            return True
         return False
 
     def containsObjectHandle(self, member: Member) -> bool:
@@ -120,15 +134,21 @@ class SafeStructOutputGenerator(BaseGenerator):
         return False
 
     def generate(self):
+        # Should be fixed in 1.4.310 headers
+        # https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/7196
+        manual_protect = ["VkCudaModuleNV", "VkCudaFunctionNV", "VkCudaModuleCreateInfoNV", "VkCudaFunctionCreateInfoNV", "VkCudaLaunchInfoNV", "VkPhysicalDeviceCudaKernelLaunchFeaturesNV", "VkPhysicalDeviceCudaKernelLaunchPropertiesNV", "VkSetPresentConfigNV", "VkPhysicalDevicePresentMeteringFeaturesNV"]
+        for struct in [x for x in self.vk.structs.values() if x.name in manual_protect]:
+            struct.protect = "VK_ENABLE_BETA_EXTENSIONS"
+
         self.write(f'''// *** THIS FILE IS GENERATED - DO NOT EDIT ***
             // See {os.path.basename(__file__)} for modifications
 
             /***************************************************************************
             *
-            * Copyright (c) 2015-2024 The Khronos Group Inc.
-            * Copyright (c) 2015-2024 Valve Corporation
-            * Copyright (c) 2015-2024 LunarG, Inc.
-            * Copyright (c) 2015-2024 Google Inc.
+            * Copyright (c) 2015-2025 The Khronos Group Inc.
+            * Copyright (c) 2015-2025 Valve Corporation
+            * Copyright (c) 2015-2025 LunarG, Inc.
+            * Copyright (c) 2015-2025 Google Inc.
             *
             * SPDX-License-Identifier: Apache-2.0
             *
@@ -159,6 +179,10 @@ class SafeStructOutputGenerator(BaseGenerator):
             #include <vulkan/utility/vk_safe_struct_utils.hpp>
 
             namespace vku {
+
+            // Mapping of unknown stype codes to structure lengths. This should be set up by the application
+            // before vkCreateInstance() and not modified afterwards.
+            std::vector<std::pair<uint32_t, uint32_t>>& GetCustomStypeInfo();
             \n''')
 
         guard_helper = PlatformGuardHelper()
@@ -251,8 +275,6 @@ class SafeStructOutputGenerator(BaseGenerator):
             #include <vector>
             #include <cstring>
 
-            extern std::vector<std::pair<uint32_t, uint32_t>> custom_stype_info;
-
             namespace vku {
             char *SafeStringCopy(const char *in_string) {
                 if (nullptr == in_string) return nullptr;
@@ -294,7 +316,7 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
             }
 ''')
         guard_helper = PlatformGuardHelper()
-        for struct in [x for x in self.vk.structs.values() if x.extends]:
+        for struct in filter(self.isInPnextChain, self.vk.structs.values()):
             safe_name = self.convertName(struct.name)
             out.extend(guard_helper.add_guard(struct.protect))
             out.append(f'            case {struct.sType}:\n')
@@ -305,7 +327,7 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
         out.append('''
             default: // Encountered an unknown sType -- skip (do not copy) this entry in the chain
                 // If sType is in custom list, construct blind copy
-                for (auto item : custom_stype_info) {
+                for (auto item : GetCustomStypeInfo()) {
                     if (item.first == static_cast<uint32_t>(header->sType)) {
                         safe_pNext = malloc(item.second);
                         memcpy(safe_pNext, header, item.second);
@@ -330,48 +352,46 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
 }
 
 void FreePnextChain(const void *pNext) {
-    if (!pNext) return;
+    // The pNext parameter is const for convenience, since it is called by code
+    // for many structures where the pNext field is const.
+    void *current = const_cast<void*>(pNext);
+    while (current) {
+        auto header = reinterpret_cast<VkBaseOutStructure *>(current);
+        void *next = header->pNext;
+        // prevent destructors from recursing behind our backs.
+        header->pNext = nullptr;
 
-    auto header = reinterpret_cast<const VkBaseOutStructure *>(pNext);
-
-    switch (header->sType) {
-        // Special-case Loader Instance Struct passed to/from layer in pNext chain
+        switch (header->sType) {
+            // Special-case Loader Instance Struct passed to/from layer in pNext chain
         case VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO:
-            FreePnextChain(header->pNext);
-            delete reinterpret_cast<const VkLayerInstanceCreateInfo *>(pNext);
+            delete reinterpret_cast<VkLayerInstanceCreateInfo *>(current);
             break;
         // Special-case Loader Device Struct passed to/from layer in pNext chain
         case VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO:
-            FreePnextChain(header->pNext);
-            delete reinterpret_cast<const VkLayerDeviceCreateInfo *>(pNext);
+            delete reinterpret_cast<VkLayerDeviceCreateInfo *>(current);
             break;
 ''')
 
-        for struct in [x for x in self.vk.structs.values() if x.extends]:
+        for struct in filter(self.isInPnextChain, self.vk.structs.values()):
             safe_name = self.convertName(struct.name)
             out.extend(guard_helper.add_guard(struct.protect))
             out.append(f'        case {struct.sType}:\n')
-            out.append(f'            delete reinterpret_cast<const {safe_name} *>(header);\n')
+            out.append(f'            delete reinterpret_cast<{safe_name} *>(header);\n')
             out.append('            break;\n')
         out.extend(guard_helper.add_guard(None))
 
         out.append('''
         default: // Encountered an unknown sType
             // If sType is in custom list, free custom struct memory and clean up
-            for (auto item : custom_stype_info) {
+            for (auto item : GetCustomStypeInfo()   ) {
                 if (item.first == static_cast<uint32_t>(header->sType)) {
-                    if (header->pNext) {
-                        FreePnextChain(header->pNext);
-                    }
-                    free(const_cast<void *>(pNext));
-                    pNext = nullptr;
+                    free(current);
                     break;
                 }
             }
-            if (pNext) {
-                FreePnextChain(header->pNext);
-            }
             break;
+        }
+        current = next;
     }
 }''')
         out.append('// clang-format on\n')
@@ -386,6 +406,7 @@ void FreePnextChain(const void *pNext) {
             #include <vulkan/utility/vk_safe_struct.hpp>
             #include <vulkan/utility/vk_struct_helper.hpp>
 
+            #include <cstddef>
             #include <cstring>
 
             namespace vku {
@@ -473,9 +494,9 @@ void FreePnextChain(const void *pNext) {
                         }
                     }
                 ''',
-                # TODO: VkPushDescriptorSetWithTemplateInfoKHR needs a custom constructor to handle pData
-                # https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7169
-                'VkPushDescriptorSetWithTemplateInfoKHR': '''
+                # TODO: VkPushDescriptorSetWithTemplateInfo needs a custom constructor to handle pData
+                # https://github.com/KhronosGroup/Vulkan-Utility-Libraries/issues/193
+                'VkPushDescriptorSetWithTemplateInfo': '''
                 ''',
             }
 
@@ -711,21 +732,13 @@ void FreePnextChain(const void *pNext) {
 
             safe_name = self.convertName(struct.name)
             if struct.union:
-                if struct.name in self.union_of_pointers:
-                    default_init_list = ' type_at_end {0},'
-                    out.append(f'''
-                        {safe_name}::{safe_name}(const {struct.name}* in_struct{self.custom_construct_params.get(struct.name, '')}, [[maybe_unused]] PNextCopyState* copy_state{copy_pnext_param})
-                        {{
-                        {copy_pnext + construct_txt}}}
-                        ''')
-                else:
-                    # Unions don't allow multiple members in the initialization list, so just call initialize
-                    out.append(f'''
-                        {safe_name}::{safe_name}(const {struct.name}* in_struct{self.custom_construct_params.get(struct.name, '')}, PNextCopyState*)
-                        {{
-                            initialize(in_struct);
-                        }}
-                        ''')
+                # Unions don't allow multiple members in the initialization list, so just call initialize
+                out.append(f'''
+                    {safe_name}::{safe_name}(const {struct.name}* in_struct{self.custom_construct_params.get(struct.name, '')}, PNextCopyState*)
+                    {{
+                        initialize(in_struct);
+                    }}
+                    ''')
             else:
                 out.append(f'''
                     {safe_name}::{safe_name}(const {struct.name}* in_struct{self.custom_construct_params.get(struct.name, '')}, [[maybe_unused]] PNextCopyState* copy_state{copy_pnext_param}) :{init_list}
@@ -733,7 +746,11 @@ void FreePnextChain(const void *pNext) {
                     {copy_pnext_if + construct_txt}}}
                     ''')
             if '' != default_init_list:
+                # trim trailing comma from initializer list
                 default_init_list = f' :{default_init_list[:-1]}'
+                # truncate union initializer list to first element
+                if struct.union:
+                    default_init_list = default_init_list.split(',')[0]
             default_init_body = '\n' + custom_defeault_construct_txt[struct.name] if struct.name in custom_defeault_construct_txt else ''
             out.append(f'''
                 {safe_name}::{safe_name}(){default_init_list}
