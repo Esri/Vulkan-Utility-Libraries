@@ -8,6 +8,7 @@
 import argparse
 import os
 import sys
+import re
 import shutil
 import common_ci
 from xml.etree import ElementTree
@@ -138,9 +139,6 @@ def RunGenerators(api: str, registry: str, targetFilter: str) -> None:
         # Parse the specified registry XML into an ElementTree object
         tree = ElementTree.parse(registry)
 
-        # Filter out extensions that are not on the API list
-        [exts.remove(e) for exts in tree.findall('extensions') for e in exts.findall('extension') if (sup := e.get('supported')) is not None and all(api not in sup.split(',') for api in apiList)]
-
         # Load the XML tree into the registry object
         reg.loadElementTree(tree)
 
@@ -151,6 +149,10 @@ def RunGenerators(api: str, registry: str, targetFilter: str) -> None:
         if has_clang_format:
             common_ci.RunShellCmd(f'clang-format -i {os.path.join(outDirectory, target)}')
 
+# helper to define paths relative to the repo root
+def repo_relative(path):
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', path))
+
 def main(argv):
     parser = argparse.ArgumentParser(description='Generate source code for this repository')
     parser.add_argument('--api',
@@ -158,6 +160,7 @@ def main(argv):
                         choices=['vulkan'],
                         help='Specify API name to generate')
     parser.add_argument('registry', metavar='REGISTRY_PATH', help='path to the Vulkan-Headers registry directory')
+    parser.add_argument('--generated-version', help='sets the header version used to generate the repo')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--target', nargs='+', help='only generate file name passed in')
     args = parser.parse_args(argv)
@@ -170,6 +173,15 @@ def main(argv):
             return -1
 
     RunGenerators(args.api, registry, args.target)
+
+    # write out the header version used to generate the code to a checked in CMake file
+    if args.generated_version:
+        # Update the CMake project version
+        with open(repo_relative('CMakeLists.txt'), "r+") as f:
+            data = f.read()
+            f.seek(0)
+            f.write(re.sub("project.*VERSION.*", f"project(VUL VERSION {args.generated_version} LANGUAGES CXX)", data))
+            f.truncate()
 
     return 0
 
