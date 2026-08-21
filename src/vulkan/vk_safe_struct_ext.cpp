@@ -18886,6 +18886,242 @@ void safe_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT::initialize
     pNext = SafePnextCopy(copy_src->pNext);
 }
 
+safe_VkCooperativeMatrixProperties2EXT::safe_VkCooperativeMatrixProperties2EXT(const VkCooperativeMatrixProperties2EXT* in_struct,
+                                                                               [[maybe_unused]] PNextCopyState* copy_state,
+                                                                               bool copy_pnext)
+    : sType(in_struct->sType),
+      MGranularity(in_struct->MGranularity),
+      NGranularity(in_struct->NGranularity),
+      KGranularity(in_struct->KGranularity),
+      AType(in_struct->AType),
+      BType(in_struct->BType),
+      CType(in_struct->CType),
+      ResultType(in_struct->ResultType) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkCooperativeMatrixProperties2EXT::safe_VkCooperativeMatrixProperties2EXT()
+    : sType(VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_2_EXT),
+      pNext(nullptr),
+      MGranularity(),
+      NGranularity(),
+      KGranularity(),
+      AType(),
+      BType(),
+      CType(),
+      ResultType() {}
+
+safe_VkCooperativeMatrixProperties2EXT::safe_VkCooperativeMatrixProperties2EXT(
+    const safe_VkCooperativeMatrixProperties2EXT& copy_src) {
+    sType = copy_src.sType;
+    MGranularity = copy_src.MGranularity;
+    NGranularity = copy_src.NGranularity;
+    KGranularity = copy_src.KGranularity;
+    AType = copy_src.AType;
+    BType = copy_src.BType;
+    CType = copy_src.CType;
+    ResultType = copy_src.ResultType;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkCooperativeMatrixProperties2EXT& safe_VkCooperativeMatrixProperties2EXT::operator=(
+    const safe_VkCooperativeMatrixProperties2EXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    MGranularity = copy_src.MGranularity;
+    NGranularity = copy_src.NGranularity;
+    KGranularity = copy_src.KGranularity;
+    AType = copy_src.AType;
+    BType = copy_src.BType;
+    CType = copy_src.CType;
+    ResultType = copy_src.ResultType;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkCooperativeMatrixProperties2EXT::~safe_VkCooperativeMatrixProperties2EXT() { FreePnextChain(pNext); }
+
+void safe_VkCooperativeMatrixProperties2EXT::initialize(const VkCooperativeMatrixProperties2EXT* in_struct,
+                                                        [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    MGranularity = in_struct->MGranularity;
+    NGranularity = in_struct->NGranularity;
+    KGranularity = in_struct->KGranularity;
+    AType = in_struct->AType;
+    BType = in_struct->BType;
+    CType = in_struct->CType;
+    ResultType = in_struct->ResultType;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkCooperativeMatrixProperties2EXT::initialize(const safe_VkCooperativeMatrixProperties2EXT* copy_src,
+                                                        [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    MGranularity = copy_src->MGranularity;
+    NGranularity = copy_src->NGranularity;
+    KGranularity = copy_src->KGranularity;
+    AType = copy_src->AType;
+    BType = copy_src->BType;
+    CType = copy_src->CType;
+    ResultType = copy_src->ResultType;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT(
+    const VkPhysicalDeviceCooperativeMatrixInfo2EXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state, bool copy_pnext)
+    : sType(in_struct->sType),
+      scope(in_struct->scope),
+      invocations(in_struct->invocations),
+      subgroupSize(in_struct->subgroupSize),
+      flags(in_struct->flags) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT()
+    : sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_INFO_2_EXT),
+      pNext(nullptr),
+      scope(),
+      invocations(),
+      subgroupSize(),
+      flags() {}
+
+safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT(
+    const safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT& copy_src) {
+    sType = copy_src.sType;
+    scope = copy_src.scope;
+    invocations = copy_src.invocations;
+    subgroupSize = copy_src.subgroupSize;
+    flags = copy_src.flags;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT& safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::operator=(
+    const safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    scope = copy_src.scope;
+    invocations = copy_src.invocations;
+    subgroupSize = copy_src.subgroupSize;
+    flags = copy_src.flags;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::~safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT() { FreePnextChain(pNext); }
+
+void safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::initialize(const VkPhysicalDeviceCooperativeMatrixInfo2EXT* in_struct,
+                                                                [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    scope = in_struct->scope;
+    invocations = in_struct->invocations;
+    subgroupSize = in_struct->subgroupSize;
+    flags = in_struct->flags;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT::initialize(const safe_VkPhysicalDeviceCooperativeMatrixInfo2EXT* copy_src,
+                                                                [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    scope = copy_src->scope;
+    invocations = copy_src->invocations;
+    subgroupSize = copy_src->subgroupSize;
+    flags = copy_src->flags;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(
+    const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state,
+    bool copy_pnext)
+    : sType(in_struct->sType),
+      cooperativeMatrixProperties2(in_struct->cooperativeMatrixProperties2),
+      cooperativeMatrixReductions(in_struct->cooperativeMatrixReductions),
+      cooperativeMatrixConversions(in_struct->cooperativeMatrixConversions),
+      cooperativeMatrixPerElementOperations(in_struct->cooperativeMatrixPerElementOperations),
+      cooperativeMatrixGetCoordinate(in_struct->cooperativeMatrixGetCoordinate) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT()
+    : sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT),
+      pNext(nullptr),
+      cooperativeMatrixProperties2(),
+      cooperativeMatrixReductions(),
+      cooperativeMatrixConversions(),
+      cooperativeMatrixPerElementOperations(),
+      cooperativeMatrixGetCoordinate() {}
+
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(
+    const safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT& copy_src) {
+    sType = copy_src.sType;
+    cooperativeMatrixProperties2 = copy_src.cooperativeMatrixProperties2;
+    cooperativeMatrixReductions = copy_src.cooperativeMatrixReductions;
+    cooperativeMatrixConversions = copy_src.cooperativeMatrixConversions;
+    cooperativeMatrixPerElementOperations = copy_src.cooperativeMatrixPerElementOperations;
+    cooperativeMatrixGetCoordinate = copy_src.cooperativeMatrixGetCoordinate;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT&
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::operator=(
+    const safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    cooperativeMatrixProperties2 = copy_src.cooperativeMatrixProperties2;
+    cooperativeMatrixReductions = copy_src.cooperativeMatrixReductions;
+    cooperativeMatrixConversions = copy_src.cooperativeMatrixConversions;
+    cooperativeMatrixPerElementOperations = copy_src.cooperativeMatrixPerElementOperations;
+    cooperativeMatrixGetCoordinate = copy_src.cooperativeMatrixGetCoordinate;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::~safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT() {
+    FreePnextChain(pNext);
+}
+
+void safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::initialize(
+    const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    cooperativeMatrixProperties2 = in_struct->cooperativeMatrixProperties2;
+    cooperativeMatrixReductions = in_struct->cooperativeMatrixReductions;
+    cooperativeMatrixConversions = in_struct->cooperativeMatrixConversions;
+    cooperativeMatrixPerElementOperations = in_struct->cooperativeMatrixPerElementOperations;
+    cooperativeMatrixGetCoordinate = in_struct->cooperativeMatrixGetCoordinate;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::initialize(
+    const safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT* copy_src, [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    cooperativeMatrixProperties2 = copy_src->cooperativeMatrixProperties2;
+    cooperativeMatrixReductions = copy_src->cooperativeMatrixReductions;
+    cooperativeMatrixConversions = copy_src->cooperativeMatrixConversions;
+    cooperativeMatrixPerElementOperations = copy_src->cooperativeMatrixPerElementOperations;
+    cooperativeMatrixGetCoordinate = copy_src->cooperativeMatrixGetCoordinate;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
 safe_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT::safe_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(
     const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state,
     bool copy_pnext)
@@ -18939,6 +19175,78 @@ void safe_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT::initialize(
     pNext = SafePnextCopy(copy_src->pNext);
 }
 
+safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(
+    const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state,
+    bool copy_pnext)
+    : sType(in_struct->sType),
+      shaderFloat4(in_struct->shaderFloat4),
+      shaderFloat6(in_struct->shaderFloat6),
+      shaderFloat8UnsignedE8M0(in_struct->shaderFloat8UnsignedE8M0),
+      shaderMXInt8(in_struct->shaderMXInt8) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT()
+    : sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT),
+      pNext(nullptr),
+      shaderFloat4(),
+      shaderFloat6(),
+      shaderFloat8UnsignedE8M0(),
+      shaderMXInt8() {}
+
+safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(
+    const safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT& copy_src) {
+    sType = copy_src.sType;
+    shaderFloat4 = copy_src.shaderFloat4;
+    shaderFloat6 = copy_src.shaderFloat6;
+    shaderFloat8UnsignedE8M0 = copy_src.shaderFloat8UnsignedE8M0;
+    shaderMXInt8 = copy_src.shaderMXInt8;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT& safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::operator=(
+    const safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    shaderFloat4 = copy_src.shaderFloat4;
+    shaderFloat6 = copy_src.shaderFloat6;
+    shaderFloat8UnsignedE8M0 = copy_src.shaderFloat8UnsignedE8M0;
+    shaderMXInt8 = copy_src.shaderMXInt8;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::~safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT() {
+    FreePnextChain(pNext);
+}
+
+void safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::initialize(
+    const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    shaderFloat4 = in_struct->shaderFloat4;
+    shaderFloat6 = in_struct->shaderFloat6;
+    shaderFloat8UnsignedE8M0 = in_struct->shaderFloat8UnsignedE8M0;
+    shaderMXInt8 = in_struct->shaderMXInt8;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::initialize(
+    const safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT* copy_src, [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    shaderFloat4 = copy_src->shaderFloat4;
+    shaderFloat6 = copy_src->shaderFloat6;
+    shaderFloat8UnsignedE8M0 = copy_src->shaderFloat8UnsignedE8M0;
+    shaderMXInt8 = copy_src->shaderMXInt8;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
 safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT::safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(
     const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state, bool copy_pnext)
     : sType(in_struct->sType), primitiveRestartIndex(in_struct->primitiveRestartIndex) {
@@ -18986,6 +19294,103 @@ void safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT::initialize(
     const safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT* copy_src, [[maybe_unused]] PNextCopyState* copy_state) {
     sType = copy_src->sType;
     primitiveRestartIndex = copy_src->primitiveRestartIndex;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
+safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::safe_VkPhysicalDeviceImageTilingControlFeaturesEXT(
+    const VkPhysicalDeviceImageTilingControlFeaturesEXT* in_struct, [[maybe_unused]] PNextCopyState* copy_state, bool copy_pnext)
+    : sType(in_struct->sType), imageTilingControl(in_struct->imageTilingControl) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::safe_VkPhysicalDeviceImageTilingControlFeaturesEXT()
+    : sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT), pNext(nullptr), imageTilingControl() {}
+
+safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::safe_VkPhysicalDeviceImageTilingControlFeaturesEXT(
+    const safe_VkPhysicalDeviceImageTilingControlFeaturesEXT& copy_src) {
+    sType = copy_src.sType;
+    imageTilingControl = copy_src.imageTilingControl;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkPhysicalDeviceImageTilingControlFeaturesEXT& safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::operator=(
+    const safe_VkPhysicalDeviceImageTilingControlFeaturesEXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    imageTilingControl = copy_src.imageTilingControl;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::~safe_VkPhysicalDeviceImageTilingControlFeaturesEXT() { FreePnextChain(pNext); }
+
+void safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::initialize(const VkPhysicalDeviceImageTilingControlFeaturesEXT* in_struct,
+                                                                    [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    imageTilingControl = in_struct->imageTilingControl;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkPhysicalDeviceImageTilingControlFeaturesEXT::initialize(
+    const safe_VkPhysicalDeviceImageTilingControlFeaturesEXT* copy_src, [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    imageTilingControl = copy_src->imageTilingControl;
+    pNext = SafePnextCopy(copy_src->pNext);
+}
+
+safe_VkImageTilingControlCreateInfoEXT::safe_VkImageTilingControlCreateInfoEXT(const VkImageTilingControlCreateInfoEXT* in_struct,
+                                                                               [[maybe_unused]] PNextCopyState* copy_state,
+                                                                               bool copy_pnext)
+    : sType(in_struct->sType), tilingControl(in_struct->tilingControl) {
+    if (copy_pnext) {
+        pNext = SafePnextCopy(in_struct->pNext, copy_state);
+    }
+}
+
+safe_VkImageTilingControlCreateInfoEXT::safe_VkImageTilingControlCreateInfoEXT()
+    : sType(VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT), pNext(nullptr), tilingControl() {}
+
+safe_VkImageTilingControlCreateInfoEXT::safe_VkImageTilingControlCreateInfoEXT(
+    const safe_VkImageTilingControlCreateInfoEXT& copy_src) {
+    sType = copy_src.sType;
+    tilingControl = copy_src.tilingControl;
+    pNext = SafePnextCopy(copy_src.pNext);
+}
+
+safe_VkImageTilingControlCreateInfoEXT& safe_VkImageTilingControlCreateInfoEXT::operator=(
+    const safe_VkImageTilingControlCreateInfoEXT& copy_src) {
+    if (&copy_src == this) return *this;
+
+    FreePnextChain(pNext);
+
+    sType = copy_src.sType;
+    tilingControl = copy_src.tilingControl;
+    pNext = SafePnextCopy(copy_src.pNext);
+
+    return *this;
+}
+
+safe_VkImageTilingControlCreateInfoEXT::~safe_VkImageTilingControlCreateInfoEXT() { FreePnextChain(pNext); }
+
+void safe_VkImageTilingControlCreateInfoEXT::initialize(const VkImageTilingControlCreateInfoEXT* in_struct,
+                                                        [[maybe_unused]] PNextCopyState* copy_state) {
+    FreePnextChain(pNext);
+    sType = in_struct->sType;
+    tilingControl = in_struct->tilingControl;
+    pNext = SafePnextCopy(in_struct->pNext, copy_state);
+}
+
+void safe_VkImageTilingControlCreateInfoEXT::initialize(const safe_VkImageTilingControlCreateInfoEXT* copy_src,
+                                                        [[maybe_unused]] PNextCopyState* copy_state) {
+    sType = copy_src->sType;
+    tilingControl = copy_src->tilingControl;
     pNext = SafePnextCopy(copy_src->pNext);
 }
 

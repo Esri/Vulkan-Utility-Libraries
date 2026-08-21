@@ -2311,6 +2311,12 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT:
                 safe_pNext = new safe_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(reinterpret_cast<const VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT *>(pNext), copy_state, false);
                 break;
+            case VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM:
+                safe_pNext = new safe_VkTensorRollingBackingCreateInfoARM(reinterpret_cast<const VkTensorRollingBackingCreateInfoARM *>(pNext), copy_state, false);
+                break;
+            case VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM:
+                safe_pNext = new safe_VkTensorExplicitTilingFormatPropertiesARM(reinterpret_cast<const VkTensorExplicitTilingFormatPropertiesARM *>(pNext), copy_state, false);
+                break;
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT:
                 safe_pNext = new safe_VkPhysicalDeviceShaderFloat8FeaturesEXT(reinterpret_cast<const VkPhysicalDeviceShaderFloat8FeaturesEXT *>(pNext), copy_state, false);
                 break;
@@ -2495,8 +2501,14 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV:
                 safe_pNext = new safe_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV *>(pNext), copy_state, false);
                 break;
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT:
+                safe_pNext = new safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT *>(pNext), copy_state, false);
+                break;
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT:
                 safe_pNext = new safe_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT *>(pNext), copy_state, false);
+                break;
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT:
+                safe_pNext = new safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT *>(pNext), copy_state, false);
                 break;
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE:
                 safe_pNext = new safe_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE *>(pNext), copy_state, false);
@@ -2518,6 +2530,12 @@ void *SafePnextCopy(const void *pNext, PNextCopyState* copy_state) {
                 break;
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT:
                 safe_pNext = new safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT *>(pNext), copy_state, false);
+                break;
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT:
+                safe_pNext = new safe_VkPhysicalDeviceImageTilingControlFeaturesEXT(reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT *>(pNext), copy_state, false);
+                break;
+            case VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT:
+                safe_pNext = new safe_VkImageTilingControlCreateInfoEXT(reinterpret_cast<const VkImageTilingControlCreateInfoEXT *>(pNext), copy_state, false);
                 break;
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV:
                 safe_pNext = new safe_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV *>(pNext), copy_state, false);
@@ -4844,6 +4862,12 @@ void FreePnextChain(const void *pNext) {
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT:
             delete reinterpret_cast<safe_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT *>(header);
             break;
+        case VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM:
+            delete reinterpret_cast<safe_VkTensorRollingBackingCreateInfoARM *>(header);
+            break;
+        case VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM:
+            delete reinterpret_cast<safe_VkTensorExplicitTilingFormatPropertiesARM *>(header);
+            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT:
             delete reinterpret_cast<safe_VkPhysicalDeviceShaderFloat8FeaturesEXT *>(header);
             break;
@@ -5028,8 +5052,14 @@ void FreePnextChain(const void *pNext) {
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV:
             delete reinterpret_cast<safe_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV *>(header);
             break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT:
+            delete reinterpret_cast<safe_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT *>(header);
+            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT:
             delete reinterpret_cast<safe_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT *>(header);
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT:
+            delete reinterpret_cast<safe_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT *>(header);
             break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE:
             delete reinterpret_cast<safe_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE *>(header);
@@ -5051,6 +5081,12 @@ void FreePnextChain(const void *pNext) {
             break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT:
             delete reinterpret_cast<safe_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT *>(header);
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT:
+            delete reinterpret_cast<safe_VkPhysicalDeviceImageTilingControlFeaturesEXT *>(header);
+            break;
+        case VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT:
+            delete reinterpret_cast<safe_VkImageTilingControlCreateInfoEXT *>(header);
             break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV:
             delete reinterpret_cast<safe_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV *>(header);
